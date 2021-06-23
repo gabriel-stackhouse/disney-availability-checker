@@ -1,4 +1,5 @@
 import argparse
+import os
 import time
 from datetime import date, datetime
 
@@ -19,7 +20,7 @@ def main():
         driver.get(constant.DISNEY_AVAILABILITY_WEBSITE)
         time.sleep(3)  # todo - change to something better
         navigate_to_date(driver, args.date)
-        date_string = args.date.strftime("%B %#d")
+        date_string = pretty_date_string(args.date)
         if is_park_available(driver, args.park):
             title = args.park.value + " is available!"
             message = args.park.value + " is available on " + date_string + "! Hurry up and reserve it!!!"
@@ -108,6 +109,16 @@ def element_with_id_exists(driver, element_id):
     except NoSuchElementException:
         return False
     return True
+
+
+def pretty_date_string(date_object):
+    day_format_code = "%#d" if os.name == "nt" else "%-d"
+    date_string = date_object.strftime("%B " + day_format_code)
+    if 4 <= date_object.day <= 20 or 24 <= date_object.day <= 30:
+        date_string += "th"
+    else:
+        date_string += ["st", "nd", "rd"][date_object.day % 10 - 1]
+    return date_string
 
 
 if __name__ == "__main__":
