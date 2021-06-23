@@ -5,6 +5,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from pushover import Client
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 
 import constant
@@ -55,6 +56,8 @@ def build_chrome_driver():
 
 
 def navigate_to_date(driver, date_to_navigate):
+    if element_with_id_exists(driver, constant.ACCEPT_COOKIES_BUTTON_ID):
+        driver.find_element_by_id(constant.ACCEPT_COOKIES_BUTTON_ID).click()
     calendar = find_calendar(driver)
     calendar_nav = expand_shadow_element(driver, calendar)
     month_header = calendar_nav.find_element_by_id("monthHeader")
@@ -97,6 +100,14 @@ def find_park_availabilities(driver):
 
 def expand_shadow_element(driver, element):
     return driver.execute_script("return arguments[0].shadowRoot", element)
+
+
+def element_with_id_exists(driver, element_id):
+    try:
+        driver.find_element_by_id(element_id)
+    except NoSuchElementException:
+        return False
+    return True
 
 
 if __name__ == "__main__":
