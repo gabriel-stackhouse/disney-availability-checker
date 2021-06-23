@@ -112,7 +112,7 @@ def element_with_id_exists(driver, element_id):
 
 
 def pretty_date_string(date_object):
-    day_format_code = "%#d" if os.name == "nt" else "%-d"
+    day_format_code = "%#d" if os.name == constant.WINDOWS_OS_NAME else "%-d"
     date_string = date_object.strftime("%B " + day_format_code)
     if 4 <= date_object.day <= 20 or 24 <= date_object.day <= 30:
         date_string += "th"
