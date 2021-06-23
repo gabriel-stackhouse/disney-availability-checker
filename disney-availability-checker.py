@@ -24,13 +24,13 @@ def main():
         if is_park_available(driver, args.park):
             title = args.park.value + " is available!"
             message = args.park.value + " is available on " + date_string + "! Hurry up and reserve it!!!"
-            send_pushbullet_alert(title, message)
+            send_pushover_alert(title, message)
             print(message)
         else:
             print(args.park.value + " is not available on " + date_string + ".")
     except Exception as e:
-        send_pushbullet_alert("Error in Disney Availability Script",
-                              "Something's going wrong with disney-availability-checker. Better go check it out.")
+        send_pushover_alert("Error in Disney Availability Script",
+                            "Something's going wrong with disney-availability-checker. Better go check it out.")
         raise e
 
 
@@ -82,7 +82,7 @@ def is_park_available(driver, park_to_check):
     return False
 
 
-def send_pushbullet_alert(title, message):
+def send_pushover_alert(title, message):
     Client().send_message(message, title=title)
 
 
