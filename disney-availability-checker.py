@@ -1,6 +1,7 @@
 import argparse
 import os
 import time
+import traceback
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
@@ -29,6 +30,9 @@ def main():
         else:
             print(args.park.value + " is not available on " + pretty_date_string(args.date) + ".")
     except Exception as e:
+        error_logs = open("errors.log", "a")
+        error_logs.write(datetime.now().isoformat() + "\n" + traceback.format_exc() + "\n")
+        error_logs.close()
         send_pushover_alert("Error in Disney Availability Script",
                             "Something's going wrong with disney-availability-checker. Better go see what's up.")
         raise e
