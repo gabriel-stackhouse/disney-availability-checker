@@ -1,12 +1,14 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import argparse
+import time
 from datetime import date, datetime
+
 from dateutil.relativedelta import relativedelta
 from pushover import Client
-from parks import Park
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 import constant
-import time
-import argparse
+from parks import Park
 
 
 def main():
@@ -32,12 +34,9 @@ def main():
 
 def parse_and_validate_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("park",
-                        type=Park,
-                        choices=list(Park),
+    parser.add_argument("park", type=Park, choices=list(Park),
                         help="the Disney park to check for availability")
-    parser.add_argument("date",
-                        type=lambda s: datetime.strptime(s, '%m-%d-%Y').date(),
+    parser.add_argument("date", type=lambda s: datetime.strptime(s, '%m-%d-%Y').date(),
                         help="date to check for availability, in format MM-dd-yyyy")
     args = parser.parse_args()
     if args.date < date.today():
