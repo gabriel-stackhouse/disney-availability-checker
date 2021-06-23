@@ -20,17 +20,17 @@ def main():
         driver.get(constant.DISNEY_AVAILABILITY_WEBSITE)
         time.sleep(3)  # todo - change to something better
         navigate_to_date(driver, args.date)
-        date_string = pretty_date_string(args.date)
         if is_park_available(driver, args.park):
             title = args.park.value + " is available!"
-            message = args.park.value + " is available on " + date_string + "! Hurry up and reserve it!!!"
+            message = args.park.value + " is available on " + pretty_date_string(args.date) \
+                + "! Hurry up and reserve it!!!"
             send_pushover_alert(title, message)
             print(message)
         else:
-            print(args.park.value + " is not available on " + date_string + ".")
+            print(args.park.value + " is not available on " + pretty_date_string(args.date) + ".")
     except Exception as e:
         send_pushover_alert("Error in Disney Availability Script",
-                            "Something's going wrong with disney-availability-checker. Better go check it out.")
+                            "Something's going wrong with disney-availability-checker. Better go see what's up.")
         raise e
 
 
@@ -79,7 +79,7 @@ def is_park_available(driver, park_to_check):
         park_name = park_availability.find_elements_by_tag_name("span")[0].text
         if park_to_check.value in park_name:
             return park_availability.get_attribute("class") == "available"
-    return False
+    raise NoSuchElementException("Cannot find park availability for " + park_to_check.value)
 
 
 def send_pushover_alert(title, message):
